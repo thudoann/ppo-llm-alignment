@@ -34,7 +34,7 @@ This project reimplements the core PPO loop from the [InstructGPT paper (Ouyang 
 
 **Policy model** - `distilgpt2` with an added linear value head. One forward pass returns both logits (for the policy) and a scalar value estimate (for advantage computation).
 
-**Frozen reference model** — a deep copy of the initial policy, never updated. KL divergence is computed against this to measure how far the policy has drifted from its starting point.
+**Frozen reference model** - a deep copy of the initial policy, never updated. KL divergence is computed against this to measure how far the policy has drifted from its starting point.
 
 **Reward model** - `distilbert-base-uncased-finetuned-sst-2-english`, frozen throughout training. Returns a score in [0, 1] where 1 = maximally positive sentiment.
 
