@@ -1,6 +1,6 @@
 # PPO for LLM Alignment - from scratch
 
-A minimal PyTorch implementation of **Proximal Policy Optimization (PPO)** applied to large language model alignment. GPT-2 learns to generate positive-sentiment text using a frozen sentiment classifier as the reward signal — built from scratch without any alignment libraries.
+A minimal PyTorch implementation of **Proximal Policy Optimization (PPO)** applied to large language model alignment. GPT-2 learns to generate positive-sentiment text using a frozen sentiment classifier as the reward signal - built from scratch without any alignment libraries.
 
 Built as part of my research preparation for a PhD in post-training and alignment for LLMs.
 
@@ -8,11 +8,11 @@ Built as part of my research preparation for a PhD in post-training and alignmen
 
 ## What & Why
 
-Large language models are powerful but not inherently aligned with human preferences. **Reinforcement Learning from Human Feedback (RLHF)** — the technique behind ChatGPT and Claude — uses PPO to fine-tune LLMs toward desired behaviors using a reward signal.
+Large language models are powerful but not inherently aligned with human preferences. **Reinforcement Learning from Human Feedback (RLHF)** the technique behind ChatGPT and Claude, uses PPO to fine-tune LLMs toward desired behaviors using a reward signal.
 
 This project reimplements the core PPO loop from the [InstructGPT paper (Ouyang et al., 2022)](https://arxiv.org/abs/2203.02155) on a small, interpretable task:
 
-> *Can we train GPT-2 to generate more positive text using only a reward signal — and what happens when we remove the KL safety constraint?*
+> *Can we train GPT-2 to generate more positive text using only a reward signal - and what happens when we remove the KL safety constraint?*
 
 ---
 
@@ -32,11 +32,11 @@ This project reimplements the core PPO loop from the [InstructGPT paper (Ouyang 
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Policy model** — `distilgpt2` with an added linear value head. One forward pass returns both logits (for the policy) and a scalar value estimate (for advantage computation).
+**Policy model** - `distilgpt2` with an added linear value head. One forward pass returns both logits (for the policy) and a scalar value estimate (for advantage computation).
 
 **Frozen reference model** — a deep copy of the initial policy, never updated. KL divergence is computed against this to measure how far the policy has drifted from its starting point.
 
-**Reward model** — `distilbert-base-uncased-finetuned-sst-2-english`, frozen throughout training. Returns a score in [0, 1] where 1 = maximally positive sentiment.
+**Reward model** - `distilbert-base-uncased-finetuned-sst-2-english`, frozen throughout training. Returns a score in [0, 1] where 1 = maximally positive sentiment.
 
 **PPO update** — batched rollouts (16 samples per update), 4 gradient epochs per batch, with:
 - Clipped policy gradient (ε=0.2)
@@ -64,26 +64,26 @@ The central experiment compares two runs over 150 updates:
 
 ### Reward over training
 Both models learn quickly in the first 20 updates. Without KL penalty,
-reward hits 0.999 by update 20 — but this is immediately reward hacking,
+reward hits 0.999 by update 20 - but this is immediately reward hacking,
 not genuine alignment. With KL (β=0.5), reward climbs more slowly but
 reflects real behavioural improvement, reaching 1.00 stably by update 140.
 
 ### Policy drift (KL divergence from reference)
 Without KL penalty, KL divergence becomes **unboundedly negative**,
-reaching −7.5 by update 150 — the policy collapses entirely away from
+reaching -7.5 by update 150 - the policy collapses entirely away from
 the reference distribution. With KL penalty, drift stays controlled
 between 0.5 and 2.0 throughout training.
 
 ### Real sample outputs
 
-**With KL penalty (β=0.5) — stable, improving:**
+**With KL penalty (β=0.5) - stable, improving:**
 ```
 Update  20: "Today I felt like a special person."
 Update  50: "Today I felt that a lot of people wanted to take advantage of."
 Update 120: "Today I felt like the perfect time to start your life."
 ```
 
-**Without KL penalty — three stages of collapse:**
+**Without KL penalty - three stages of collapse:**
 ```
 # Stage 1 — looks fine (update 20)
 "Today I felt like I was being a good person."
