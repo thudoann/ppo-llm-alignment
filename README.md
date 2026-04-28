@@ -38,7 +38,7 @@ This project reimplements the core PPO loop from the [InstructGPT paper (Ouyang 
 
 **Reward model** - `distilbert-base-uncased-finetuned-sst-2-english`, frozen throughout training. Returns a score in [0, 1] where 1 = maximally positive sentiment.
 
-**PPO update** — batched rollouts (16 samples per update), 4 gradient epochs per batch, with:
+**PPO update** - batched rollouts (16 samples per update), 4 gradient epochs per batch, with:
 - Clipped policy gradient (ε=0.2)
 - Value function loss
 - KL divergence penalty against the frozen reference model
